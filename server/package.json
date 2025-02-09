@@ -7,7 +7,7 @@
     "license": "ISC",
     "scripts": {
         "start": "node --trace-warnings --require ts-node/register src/index.ts",
-        "build": "rm -rf dist ../dist && tsc && mv dist ../dist"
+        "build": "rm -rf dist ../dist/server && tsc && mv dist ../dist/server"
     },
     "dependencies": {
     },

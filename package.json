@@ -6,7 +6,7 @@
     "author": "Klapeks",
     "license": "ISC",
     "scripts": {
-        "build": "cd server && npm run build"
+        "build": "rm -rf dist && mkdir dist && cd ./server && npm run build && cd ../frontend && npm run build:copy"
     },
     "dependencies": {
     },

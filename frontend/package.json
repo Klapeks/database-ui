@@ -6,7 +6,8 @@
     "scripts": {
         "dev": "vite",
         "start": "vite --host --port 8080",
-        "build": "tsc -b && vite build",
+        "build": "rm -rf dist && tsc -b && vite build",
+        "build:copy": "rm -rf ../dist/web && npm run build && mv dist ../dist/web",
         "lint": "eslint .",
         "preview": "vite preview"
     },

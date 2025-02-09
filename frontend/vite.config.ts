@@ -11,12 +11,13 @@ const devProxy = {} as { [key: string]: ProxyOptions };
 function createDevProxy(api: string, target: string) {
     devProxy[api] = { target, secure: false, ws: true, changeOrigin: true };
 }
-createDevProxy("^/api", targetServer);
+createDevProxy("^/api/database-ui/api", targetServer);
 
 
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [react()],
+    base: "/api/database-ui",
+    plugins: [ react() ],
     resolve: {
         alias: {
             '@': mPath.resolve(__dirname, './src')

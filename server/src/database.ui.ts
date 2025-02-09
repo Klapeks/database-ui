@@ -1,10 +1,21 @@
 import { Router } from "express";
 import { DatabaseOptions } from "./types";
 import AbstractDatabase from "./databases/abstract";
+import mPath from 'path';
+import fs from 'fs';
+import express from 'express';
 
 const databaseUI = {
     createWebRouter() {
-        
+        let webPath = mPath.join(__dirname, '../web');
+        if (!fs.existsSync(webPath)) throw "No web path found :(";
+        const router = Router();
+        router.use(express.static(webPath));
+        router.get('*', (req, res, next) => {
+            if (req.url.startsWith('/api')) return next();
+            return res.sendFile(mPath.join(webPath, 'index.html'));
+        });
+        return router;
     },
     async createRouter(options: DatabaseOptions) {
         const databaseType = options.type;

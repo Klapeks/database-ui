@@ -58,10 +58,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
+var path_1 = __importDefault(require("path"));
+var fs_1 = __importDefault(require("fs"));
+var express_2 = __importDefault(require("express"));
 var databaseUI = {
     createWebRouter: function () {
+        var webPath = path_1.default.join(__dirname, '../web');
+        if (!fs_1.default.existsSync(webPath))
+            throw "No web path found :(";
+        var router = (0, express_1.Router)();
+        router.use(express_2.default.static(webPath));
+        router.get('*', function (req, res, next) {
+            if (req.url.startsWith('/api'))
+                return next();
+            return res.sendFile(path_1.default.join(webPath, 'index.html'));
+        });
+        return router;
     },
     createRouter: function (options) {
         return __awaiter(this, void 0, void 0, function () {
