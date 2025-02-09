@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "CommonJS",
+        "strict": true,
+        "declaration": false,
+        "downlevelIteration": true,
+        "resolveJsonModule": true,
+        "noImplicitAny": true,
+        "esModuleInterop": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": false,
+        "outDir": "dist/js",
+
+        "paths": {
+            "@/*": ["./src/*"]
+        }
+        // "outFile": "index.js"
+    },
+    "include": ["src/**/*", "api/**/*"],
+    "exclude": ["node_modules", "**/*.spec.ts", "dist", "dist/**/*"]
+}

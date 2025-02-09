@@ -1,0 +1,7 @@
+node_modules
+/dist
+Desktop.ini
+*.sqlite
+.env
+.DS_Store
+deploy.env

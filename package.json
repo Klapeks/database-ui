@@ -1,0 +1,16 @@
+{
+    "name": "@klapeks/database-ui",
+    "description": "Web database ui",
+    "version": "0.0.1",
+    "main": "src/index.ts",
+    "author": "Klapeks",
+    "license": "ISC",
+    "scripts": {
+        "start": "node --trace-warnings --require ts-node/register src/index.ts"
+    },
+    "dependencies": {
+    },
+    "devDependencies": {
+        "@types/node": "^18.7.8"
+    }
+}
