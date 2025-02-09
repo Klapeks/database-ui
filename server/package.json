@@ -6,7 +6,8 @@
     "author": "Klapeks",
     "license": "ISC",
     "scripts": {
-        "start": "node --trace-warnings --require ts-node/register src/index.ts"
+        "start": "node --trace-warnings --require ts-node/register src/index.ts",
+        "build": "rm -rf dist ../dist && tsc && mv dist ../dist"
     },
     "dependencies": {
     },

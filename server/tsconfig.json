@@ -3,21 +3,21 @@
         "target": "es5",
         "module": "CommonJS",
         "strict": true,
-        "declaration": false,
+        "declaration": true,
         "downlevelIteration": true,
         "resolveJsonModule": true,
         "noImplicitAny": true,
         "esModuleInterop": true,
-        "removeComments": true,
+        "removeComments": false,
         "preserveConstEnums": true,
         "sourceMap": false,
-        "outDir": "dist/js",
+        "outDir": "dist",
 
         "paths": {
             "@/*": ["./src/*"]
         }
         // "outFile": "index.js"
     },
-    "include": ["src/**/*", "api/**/*"],
+    "include": ["src/**/*"],
     "exclude": ["node_modules", "**/*.spec.ts", "dist", "dist/**/*"]
 }
