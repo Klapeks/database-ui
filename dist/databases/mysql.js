@@ -61,7 +61,16 @@ var MySQLDatabase = /** @class */ (function (_super) {
     __extends(MySQLDatabase, _super);
     function MySQLDatabase(options) {
         var _this = _super.call(this, options) || this;
-        _this.pool = mysql2_1.default.createPool(options);
+        if (options.type != 'mysql')
+            throw "Not a mysql?";
+        _this.pool = mysql2_1.default.createPool({
+            host: options.host,
+            port: options.port,
+            user: options.username,
+            password: options.password,
+            database: options.database,
+            charset: options.charset
+        });
         return _this;
     }
     MySQLDatabase.prototype.getConnection = function () {

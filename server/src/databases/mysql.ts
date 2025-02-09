@@ -7,7 +7,15 @@ export class MySQLDatabase extends AbstractDatabase {
     readonly pool: mysqld.Pool;
     constructor(options: DatabaseOptions) {
         super(options);
-        this.pool = mysqld.createPool(options);
+        if (options.type != 'mysql') throw "Not a mysql?";
+        this.pool = mysqld.createPool({
+            host: options.host,
+            port: options.port,
+            user: options.username,
+            password: options.password,
+            database: options.database,
+            charset: options.charset
+        });
     }
 
     async getConnection(): Promise<mysqld.PoolConnection> {

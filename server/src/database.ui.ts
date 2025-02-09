@@ -24,7 +24,7 @@ const databaseUI = {
         const router = Router();
         router.get('/database-type', (req, res) => {
             res.status(200).send({ type: databaseType })
-        })
+        });
         router.post('/sql', async (req, res) => {
             try {
                 if (!req.body.sql) throw "No sql field found";
@@ -40,8 +40,8 @@ const databaseUI = {
                     error: err
                 })
             }
-        })
-        return router
+        });
+        return router;
     }
 }
 
