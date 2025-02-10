@@ -12,24 +12,26 @@ export const SideBar: FC = () => {
 
     return (
         <div className="component" style={{
-            padding: '15px',
+            padding: '10px',
             borderRadius: 0,
-            minHeight: '100dvh'
+            minHeight: '100dvh',
+            gap: '7px'
         }}>
             <p>Database type: {databaseType}</p>
 
             <br></br>
             { databasesList.map((db) => (
-                <button key={db}
-                onClick={() => selectDatabase(db)}>
+                <button className="button flex-start" key={db}
+                title={db} onClick={() => selectDatabase(db)}>
                     <p>{db}</p>
                 </button>
             )) }
 
             <hr style={{ margin: '15px 0'}}></hr>
+            { selectedDatabase && <p>Tables:</p> }
             { selectedDatabaseTables?.map(table => (
-                <button key={table}
-                onClick={() => selectTable(table)}>
+                <button className="button flex-start" key={table}
+                title={table} onClick={() => selectTable(table)}>
                     <p>{table}</p>
                 </button>
             )) }

@@ -1,3 +1,4 @@
+@use './Variables';
 
 * {
     margin: 0;
@@ -25,8 +26,8 @@
     --none-color: #5f6571;
     --inverted-text-color: #000;
 
-    --background-color: #25293C;
-    --component-color: #2F3349;
+    --background-color: rgb(28, 40, 50);
+    --component-color: rgb(28, 69, 70);
     --component-shadow: 0 3px 9px 1px rgba(12, 16, 27, 0.07),
         0 9px 8px rgba(12, 16, 27, 0.005),
         0 1px 6px 4px rgba(12, 16, 27, 0.04);
@@ -81,6 +82,26 @@ body {
                 font-style: italic;
                 opacity: 0.2;
             }
+        }
+    }
+    .button {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 10px;
+        font-size: 16px;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        border: none;
+        outline: none;
+        background-color: var(--main-color);
+        color: black;
+
+        @include Variables.hoverable();
+
+        &.flex-start {
+            justify-content: flex-start;
         }
     }
 }

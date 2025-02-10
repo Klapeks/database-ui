@@ -4,6 +4,7 @@ import AbstractDatabase from "./databases/abstract";
 import mPath from 'path';
 import fs from 'fs';
 import express from 'express';
+import { easyPassEncoder } from "./utils/easy.pass.encoder";
 
 const databaseUI = {
     createWebRouter() {
@@ -34,13 +35,19 @@ const databaseUI = {
 
         const router = Router();
         router.get('/database-type', (req, res) => {
-            res.status(200).send({ type: databaseType })
+            res.status(200).send({ 
+                type: databaseType,
+                key: database.key
+            })
         });
         router.post('/sql', async (req, res) => {
             try {
                 if (!req.body.sql) throw "No sql field found";
+                req.body.sql = easyPassEncoder.decode(req.body.sql, database.key);
                 const data = await database.sql(req.body.sql, req.body.params);
-                res.status(200).send({ data });
+                res.status(200).send({ 
+                    data: easyPassEncoder.encodeJSON(data, database.key)
+                });
             } catch (err: any) {
                 if (typeof err == 'string') {
                     res.status(400).send({ message: err, error: err });

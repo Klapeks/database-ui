@@ -24,6 +24,8 @@ function App() {
             <SideBar />
             <div className="page-view"
             style={{
+                position: 'sticky',
+                top: 0,
                 overflowX: "hidden",
                 overflowY: "auto",
                 width: '100%',
