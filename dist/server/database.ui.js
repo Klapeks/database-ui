@@ -113,7 +113,7 @@ var databaseUI = {
                             });
                         });
                         router.post('/sql', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                            var data, err_1;
+                            var data, encoded, err_1;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
@@ -124,9 +124,9 @@ var databaseUI = {
                                         return [4 /*yield*/, database.sql(req.body.sql, req.body.params)];
                                     case 1:
                                         data = _a.sent();
-                                        res.status(200).send({
-                                            data: easy_pass_encoder_1.easyPassEncoder.encodeJSON(data, database.key)
-                                        });
+                                        encoded = Array.isArray(data) ? easy_pass_encoder_1.easyPassEncoder.encodeArray(data, database.key)
+                                            : easy_pass_encoder_1.easyPassEncoder.encodeJSON(data, database.key);
+                                        res.status(200).send({ data: encoded });
                                         return [3 /*break*/, 3];
                                     case 2:
                                         err_1 = _a.sent();

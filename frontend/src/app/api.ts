@@ -36,6 +36,9 @@ export async function runSQL<T = any>(sql: string, params?: any[]): Promise<T> {
     if (!_dbInfo) throw "No db info";
     sql = easyPassEncoder.encode(sql, _dbInfo.key);
     const res = await axios.post('/api/database-ui/api/sql', { sql, params });
+    if (Array.isArray(res.data.data)) {
+        return easyPassEncoder.decodeArray(res.data.data, _dbInfo.key) as any;
+    }
     return easyPassEncoder.decodeJSON(res.data.data, _dbInfo.key);
 }
 

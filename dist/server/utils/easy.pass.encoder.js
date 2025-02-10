@@ -27,6 +27,20 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.easyPassEncoder = void 0;
 exports.easyPassEncoder = {
+    decodeArray: function (array, pass) {
+        var newArr = Array(array.length);
+        for (var i = 0; i < array.length; i++) {
+            newArr[i] = exports.easyPassEncoder.decodeJSON(array[i], pass);
+        }
+        return newArr;
+    },
+    encodeArray: function (array, pass) {
+        var newArr = Array(array.length);
+        for (var i = 0; i < array.length; i++) {
+            newArr[i] = exports.easyPassEncoder.encodeJSON(array[i], pass);
+        }
+        return newArr;
+    },
     encodeJSON: function (json, pass) {
         return exports.easyPassEncoder.encode(JSON.stringify(json), pass);
     },

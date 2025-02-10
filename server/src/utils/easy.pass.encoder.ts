@@ -1,10 +1,26 @@
 
 
 export const easyPassEncoder = {
+    decodeArray(array: string[], pass: string): any[] {
+        let newArr = Array<string>(array.length);
+        for (let i = 0; i < array.length; i++) {
+            newArr[i] = easyPassEncoder.decodeJSON(array[i], pass);
+        }
+        return newArr;
+    },
+    encodeArray(array: any[], pass: string): string[] {
+        let newArr = Array<string>(array.length);
+        for (let i = 0; i < array.length; i++) {
+            newArr[i] = easyPassEncoder.encodeJSON(array[i], pass);
+        }
+        return newArr;
+    },
+
+
     encodeJSON(json: any, pass: string): string {
         return easyPassEncoder.encode(JSON.stringify(json), pass);
     },
-    decodeJSON(base64: any, pass: string): any {
+    decodeJSON(base64: string, pass: string): any {
         return JSON.parse(easyPassEncoder.decode(base64, pass));
     },
     encode(original: string, pass: string): string {
