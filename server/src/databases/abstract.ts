@@ -1,5 +1,5 @@
-import { DatabaseOptions, DatabaseType } from "@/types";
-import utils from "@/utils/utils";
+import { DatabaseOptions, DatabaseType } from "../types";
+import utils from "../utils/utils";
 
 
 

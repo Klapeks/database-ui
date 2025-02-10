@@ -12,10 +12,6 @@
         "preserveConstEnums": true,
         "sourceMap": false,
         "outDir": "dist",
-
-        "paths": {
-            "@/*": ["./src/*"]
-        }
         // "outFile": "index.js"
     },
     "include": ["src/**/*"],

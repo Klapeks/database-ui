@@ -1,4 +1,4 @@
-import { DatabaseOptions } from "@/types";
+import { DatabaseOptions } from "../types";
 import AbstractDatabase from "./abstract";
 import mysqld, { PoolOptions } from 'mysql2';
 
