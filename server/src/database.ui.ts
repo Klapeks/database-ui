@@ -45,9 +45,10 @@ const databaseUI = {
                 if (!req.body.sql) throw "No sql field found";
                 req.body.sql = easyPassEncoder.decode(req.body.sql, database.key);
                 const data = await database.sql(req.body.sql, req.body.params);
-                let encoded = Array.isArray(data) 
-                    ? easyPassEncoder.encodeArray(data, database.key)
-                    : easyPassEncoder.encodeJSON(data, database.key);
+                // let encoded = Array.isArray(data) 
+                //     ? easyPassEncoder.encodeArray(data, database.key)
+                //     : easyPassEncoder.encodeJSON(data, database.key);
+                let encoded = easyPassEncoder.encodeJSON(data, database.key);;
                 res.status(200).send({ data: encoded });
             } catch (err: any) {
                 if (typeof err == 'string') {

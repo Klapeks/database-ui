@@ -124,8 +124,8 @@ var databaseUI = {
                                         return [4 /*yield*/, database.sql(req.body.sql, req.body.params)];
                                     case 1:
                                         data = _a.sent();
-                                        encoded = Array.isArray(data) ? easy_pass_encoder_1.easyPassEncoder.encodeArray(data, database.key)
-                                            : easy_pass_encoder_1.easyPassEncoder.encodeJSON(data, database.key);
+                                        encoded = easy_pass_encoder_1.easyPassEncoder.encodeJSON(data, database.key);
+                                        ;
                                         res.status(200).send({ data: encoded });
                                         return [3 /*break*/, 3];
                                     case 2:
