@@ -67,23 +67,6 @@ body {
             padding: 15px;
         }
     }
-    .test-table {
-        &, table {
-            border-spacing: 0px;
-        }
-        &, table, th, td {
-            border: 1px solid var(--text-color);
-        }
-        th, td {
-            text-align: start;
-            padding: 5px 10px;
-            white-space: nowrap;
-            .null {
-                font-style: italic;
-                opacity: 0.2;
-            }
-        }
-    }
     .button {
         display: flex;
         flex-direction: row;

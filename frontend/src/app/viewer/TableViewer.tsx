@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { runSQL } from "../api";
-
+import styles from './table-viewer.module.scss';
 
 interface IProps {
     database: string | undefined,
@@ -40,7 +40,7 @@ export const TableViewer: FC<IProps> = ({ database, table }) => {
                     FROM \`${database}\`.\`${table}\`
                 `).then(data => {
                     // console.log(data[0]?.count || data[0] || data);
-                    setTableDataCount(data[0]?.count || data[0] || data)
+                    setTableDataCount(data[0]?.count ?? data[0] ?? data)
                 })
             });
         }
@@ -58,7 +58,22 @@ export const TableViewer: FC<IProps> = ({ database, table }) => {
             // console.log("DATA:", data);
             setTableData(data);
         });
-    }, [ tableSchema, options ])
+    }, [ tableSchema, options ]);
+
+    const toggleSorting = (key: string) => {
+        if (options.orderBy == key) {
+            if (options.orderType == 'ASC') {
+                options.orderType = 'DESC';
+                options.orderBy = undefined;
+            } else if (options.orderType == 'DESC') {
+                options.orderType = 'ASC';
+            }
+        } else {
+            options.orderBy = key;
+            options.orderType = 'DESC';
+        }
+        setOptions({ ...options });
+    }
 
     if (!database || !table) return null;
     if (!tableSchema) return null;
@@ -66,11 +81,26 @@ export const TableViewer: FC<IProps> = ({ database, table }) => {
     return (
         <div className="component pad-15"
         style={{ overflow: 'auto', }}>
-            <table className="test-table">
+            <p>Total: { tableData?.length ?? '-' } of { tableDataCount }</p>
+
+            <table className={styles['table-viewer']}>
                 <thead>
                     <tr>
+                        <th></th>
                         {tableSchema.map(t => (
-                            <th key={t.COLUMN_NAME}>{t.COLUMN_NAME}</th>
+                            <th key={t.COLUMN_NAME} className="column-name">
+                                <p>{t.COLUMN_NAME} {
+                                    t.COLUMN_KEY == 'PRI' ? 
+                                    <span style={{ fontSize: '12px' }}>🔑</span>
+                                    : null
+                                }</p>
+                                <p className="type">{t.COLUMN_TYPE}{t.IS_NULLABLE && t.IS_NULLABLE != 'NO' ? '?' : ''}</p>
+                                <button className="button sort" onClick={() => toggleSorting(t.COLUMN_NAME)}>
+                                    { options.orderBy == t.COLUMN_NAME ? (
+                                        options.orderType == 'DESC' ? <p>🔽</p> : <p>🔼</p>
+                                    ) : <p>↕️</p> }
+                                </button>
+                            </th>
                         ))}
                     </tr>
                 </thead>
@@ -79,6 +109,7 @@ export const TableViewer: FC<IProps> = ({ database, table }) => {
                         const priKey = database + '-' + table + '-' + dataKey(tableSchema, data);
                         return (
                             <tr key={priKey}>
+                                <td className="edit-pen">✏️</td>
                                 { Object.keys(data).map(field => (
                                     <td key={priKey + '-' + field}>
                                         <p className={[

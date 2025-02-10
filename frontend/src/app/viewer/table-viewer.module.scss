@@ -1,0 +1,49 @@
+@use '@/assets/Variables';
+
+
+.table-viewer {
+    // background-color: rebeccapurple;
+    border-spacing: 0px;
+    border: 1px solid var(--text-color);
+
+    :global {
+        // ignore it
+        _ { color: inherit; }
+        
+        th, td {
+            position: relative;
+            border: 1px solid var(--text-color);
+            text-align: start;
+            padding: 5px 10px;
+            white-space: nowrap;
+        }
+        .column-name { 
+            // padding: 10px;
+            padding-right: 40px;
+            .type {
+                opacity: 0.5;
+                font-size: 13px;
+                font-weight: 100;
+            }
+            .sort {
+                position: absolute;
+                right: 5px;
+                padding: 0;
+                width: 30px;
+                height: 30px;
+                top: calc(50% - 15px);
+                background-color: transparent;
+            }
+        }
+        .edit-pen {
+            cursor: pointer;
+            @include Variables.unselectable();
+            @include Variables.hoverable();
+        }
+        .null {
+            font-style: italic;
+            opacity: 0.2;
+        }
+
+    }
+}
