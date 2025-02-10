@@ -66,6 +66,7 @@ var express_1 = require("express");
 var path_1 = __importDefault(require("path"));
 var fs_1 = __importDefault(require("fs"));
 var express_2 = __importDefault(require("express"));
+var easy_pass_encoder_1 = require("./utils/easy.pass.encoder");
 var databaseUI = {
     createWebRouter: function () {
         var webPath = path_1.default.join(__dirname, '../web');
@@ -106,7 +107,10 @@ var databaseUI = {
                     case 6:
                         router = (0, express_1.Router)();
                         router.get('/database-type', function (req, res) {
-                            res.status(200).send({ type: databaseType });
+                            res.status(200).send({
+                                type: databaseType,
+                                key: database.key
+                            });
                         });
                         router.post('/sql', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                             var data, err_1;
@@ -116,10 +120,13 @@ var databaseUI = {
                                         _a.trys.push([0, 2, , 3]);
                                         if (!req.body.sql)
                                             throw "No sql field found";
+                                        req.body.sql = easy_pass_encoder_1.easyPassEncoder.decode(req.body.sql, database.key);
                                         return [4 /*yield*/, database.sql(req.body.sql, req.body.params)];
                                     case 1:
                                         data = _a.sent();
-                                        res.status(200).send({ data: data });
+                                        res.status(200).send({
+                                            data: easy_pass_encoder_1.easyPassEncoder.encodeJSON(data, database.key)
+                                        });
                                         return [3 /*break*/, 3];
                                     case 2:
                                         err_1 = _a.sent();
