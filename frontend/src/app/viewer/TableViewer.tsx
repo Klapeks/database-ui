@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { runSQL } from "../api";
 import styles from './table-viewer.module.scss';
+import { Pagination } from "./Pagination";
 
 interface IProps {
     database: string | undefined,
@@ -19,6 +20,8 @@ export const TableViewer: FC<IProps> = ({ database, table }) => {
     const [ tableData, setTableData ] = useState<any[]>();
     const [ tableDataCount, setTableDataCount ] = useState(0);
     const [ options, setOptions ] = useState({
+        page: 1,
+        limit: 100,
         orderBy: undefined as string | undefined,
         orderType: "ASC" as "ASC" | "DESC"
     })
@@ -53,7 +56,7 @@ export const TableViewer: FC<IProps> = ({ database, table }) => {
             SELECT ${tableSchema.map(r => "`" + r.COLUMN_NAME + "`").join(', ')}
             FROM \`${database}\`.\`${table}\`
             ${options.orderBy ? ('ORDER BY ' + options.orderBy + ' ' + options.orderType) : ''}
-            LIMIT 500;
+            LIMIT ${options.limit} OFFSET ${(options.page - 1) * options.limit};
         `).then(data => {
             // console.log("DATA:", data);
             setTableData(data);
@@ -81,7 +84,18 @@ export const TableViewer: FC<IProps> = ({ database, table }) => {
     return (
         <div className="component pad-15"
         style={{ overflow: 'auto', }}>
-            <p>Total: { tableData?.length ?? '-' } of { tableDataCount }</p>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+            }}>
+                <p>Total: { tableData?.length ?? '-' } of { tableDataCount }</p>
+                <Pagination page={options.page}
+                setPage={(page) => setOptions({...options, page})} 
+                maxPages={ Math.ceil(tableDataCount / options.limit) }/>
+            </div>
+
 
             <table className={styles['table-viewer']}>
                 <thead>

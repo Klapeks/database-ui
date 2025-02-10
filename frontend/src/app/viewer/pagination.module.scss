@@ -1,0 +1,33 @@
+@use '@/assets/Variables';
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius);
+    padding: 0 5px;
+
+    :global {
+        _ { color: inherit; }
+        div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 2px;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            cursor: pointer;
+            @include Variables.unselectable();
+            &:hover {
+                color: var(--main-color);
+            }
+            &.active {
+                background-color: var(--main-color);
+                color: white;
+            }
+        }
+    }
+}
