@@ -134,6 +134,7 @@ var databaseUI = {
                                             res.status(400).send({ message: err_1, error: err_1 });
                                             return [2 /*return*/];
                                         }
+                                        console.error("Unknown error:", err_1);
                                         res.status(500).send({
                                             message: err_1.message || "Unknown error",
                                             error: err_1

@@ -53,6 +53,7 @@ const databaseUI = {
                     res.status(400).send({ message: err, error: err });
                     return;
                 }
+                console.error("Unknown error:", err);
                 res.status(500).send({
                     message: err.message || "Unknown error",
                     error: err
