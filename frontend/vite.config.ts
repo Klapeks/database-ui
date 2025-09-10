@@ -5,8 +5,8 @@ import react from '@vitejs/plugin-react';
 import mPath from 'path';
 
 
-// let targetServer = 'http://127.0.0.1:5995';
-let targetServer = 'http://127.0.0.1:5965';
+let targetServer = 'http://127.0.0.1:5995';
+// let targetServer = 'http://127.0.0.1:5965';
 
 const devProxy = {} as { [key: string]: ProxyOptions };
 function createDevProxy(api: string, target: string) {

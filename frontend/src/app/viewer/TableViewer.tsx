@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { runSQL } from "../api";
 import styles from './table-viewer.module.scss';
 import { Pagination } from "./Pagination";
+import { fireEditDataModal } from "./modals/EditData";
 
 interface IProps {
     database: string | undefined,
@@ -16,6 +17,7 @@ function dataKey(schema: any[], data: any) {
 
 export const TableViewer: FC<IProps> = ({ database, table }) => {
 
+    const [ reloadInc, setReloadInc ] = useState(0);
     const [ tableSchema, setTableSchema ] = useState<any[]>();
     const [ tableData, setTableData ] = useState<any[]>();
     const [ tableDataCount, setTableDataCount ] = useState(0);
@@ -47,7 +49,7 @@ export const TableViewer: FC<IProps> = ({ database, table }) => {
                 })
             });
         }
-    }, [ database, table ]);
+    }, [ database, table, reloadInc ]);
 
     useEffect(() => {
         if (!tableSchema) return;
@@ -76,6 +78,11 @@ export const TableViewer: FC<IProps> = ({ database, table }) => {
             options.orderType = 'DESC';
         }
         setOptions({ ...options });
+    }
+    const editData = (data: any) => {
+        if (!database || !table || !tableSchema) return;
+        fireEditDataModal({ database, table, data, tableSchema })
+        .finally(() => setReloadInc((prev) => prev + 1));
     }
 
     if (!database || !table) return null;
@@ -123,7 +130,8 @@ export const TableViewer: FC<IProps> = ({ database, table }) => {
                         const priKey = database + '-' + table + '-' + dataKey(tableSchema, data);
                         return (
                             <tr key={priKey}>
-                                <td className="edit-pen">✏️</td>
+                                <td className="edit-pen"
+                                onClick={() => editData(data)}>✏️</td>
                                 { Object.keys(data).map(field => (
                                     <td key={priKey + '-' + field}>
                                         <p className={[
