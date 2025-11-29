@@ -18,7 +18,11 @@ router.use(async (req, res, next) => {
 })
 
 router.use(databaseUI.createWebRouter());
-databaseUI.createRouter(options).then(uiApiRouter => {
+databaseUI.createApiRouter({
+    'main': options,
+    ...
+    'other-db': otherOptions
+}).then(uiApiRouter => {
     router.use('/api', uiApiRouter);
 });
 
