@@ -1,5 +1,6 @@
 import { FC } from "react"
 import { useDatabase } from "../database.store";
+import { databaseInstanceName } from "../api";
 
 
 export const SideBar: FC = () => {
@@ -17,7 +18,10 @@ export const SideBar: FC = () => {
             minHeight: '100dvh',
             gap: '7px'
         }}>
-            <p>Database type: {databaseType}</p>
+            <div>
+                <p>Instance: {databaseInstanceName}</p>
+                <p>Database type: {databaseType}</p>
+            </div>
 
             <br></br>
             { databasesList.map((db) => (

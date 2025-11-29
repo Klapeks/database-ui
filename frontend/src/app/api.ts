@@ -26,16 +26,22 @@ export function getDatabaseType(): DatabaseType {
     return _dbInfo.type;
 }
 
+const params = new URLSearchParams(window.location.search);;
+export const databaseInstanceName = params.get('instanceName') || 'main';
 
 export async function loadDatabaseType() {
-    const res = await axios.get('/api/database-ui/api/database-type');
+    const res = await axios.get('/api/database-ui/api/database-type', {
+        params: { instanceName: databaseInstanceName }
+    });
     _dbInfo = res.data;
     return _dbInfo!.type;
 }
 export async function runSQL<T = any>(sql: string, params?: any[]): Promise<T> {
     if (!_dbInfo) throw "No db info";
     sql = easyPassEncoder.encode(sql, _dbInfo.key);
-    const res = await axios.post('/api/database-ui/api/sql', { sql, params });
+    const res = await axios.post('/api/database-ui/api/sql', { sql, params }, {
+        params: { instanceName: databaseInstanceName }
+    });
     return easyPassEncoder.decodeJSON(res.data.data, _dbInfo.key);
 }
 

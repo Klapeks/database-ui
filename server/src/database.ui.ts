@@ -18,30 +18,46 @@ const databaseUI = {
         });
         return router;
     },
-    async createRouter(options: DatabaseOptions) {
-        const databaseType = options.type;
-        let database: AbstractDatabase;
-
-        switch (databaseType) {
-            case "mysql": {
-                const lib = await import('./databases/mysql');
-                database = new lib.MySQLDatabase(options);
-                break;
+    async createApiRouter(databaseInstancesOptions: {
+        [name: string]: DatabaseOptions
+    }) {
+        const databaseInstance = new Map<string, AbstractDatabase>();
+        for (let options of Object.entries(databaseInstancesOptions)) {
+            const databaseType = options[1].type;
+            let database: AbstractDatabase;
+            switch (databaseType) {
+                case "mysql": {
+                    const lib = await import('./databases/mysql');
+                    database = new lib.MySQLDatabase(options[1]);
+                    break;
+                }
+                case "sqlite": throw "No sqlite support yet";
+                case "postgres": throw "No postgres support yet";
+                default: throw "No database type found: " + (databaseType satisfies never)
             }
-            case "sqlite": throw "No sqlite support yet";
-            case "postgres": throw "No postgres support yet";
-            default: throw "No database type found: " + (databaseType satisfies never)
+            databaseInstance.set(options[0], database);
         }
+        const instanceOf = (req: any) => {
+            let instanceName = req.query.instanceName || 'main';
+            return databaseInstance.get(instanceName);
+        }
+
 
         const router = Router();
         router.get('/database-type', (req, res) => {
+            const database = instanceOf(req);
+            if (!database) return res.status(404).send({
+                message: "Unknown instance",
+            });
             res.status(200).send({ 
-                type: databaseType,
+                type: database.options.type,
                 key: database.key
-            })
+            });
         });
         router.post('/sql', async (req, res) => {
             try {
+                const database = instanceOf(req);
+                if (!database) throw "Unknown instance";
                 if (!req.body.sql) throw "No sql field found";
                 req.body.sql = easyPassEncoder.decode(req.body.sql, database.key);
                 const data = await database.sql(req.body.sql, req.body.params);
