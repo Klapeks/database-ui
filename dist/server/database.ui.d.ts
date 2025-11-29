@@ -3,6 +3,8 @@ declare const databaseUI: {
     createWebRouter(): import("express-serve-static-core").Router;
     createApiRouter(databaseInstancesOptions: {
         [name: string]: DatabaseOptions;
-    }): Promise<import("express-serve-static-core").Router>;
+    }, options?: {
+        getOptions?: ((name: string) => Promise<DatabaseOptions | undefined | null>) | undefined;
+    } | undefined): Promise<import("express-serve-static-core").Router>;
 };
 export default databaseUI;

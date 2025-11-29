@@ -20,32 +20,45 @@ const databaseUI = {
     },
     async createApiRouter(databaseInstancesOptions: {
         [name: string]: DatabaseOptions
+    }, options?: {
+        getOptions?: (name: string) => Promise<DatabaseOptions | undefined | null>
     }) {
-        const databaseInstance = new Map<string, AbstractDatabase>();
-        for (let options of Object.entries(databaseInstancesOptions)) {
-            const databaseType = options[1].type;
+        const databaseInstance = new Map<string, AbstractDatabase | null>();
+        const createInsance = async (options: DatabaseOptions) => {
+            const databaseType = options.type;
             let database: AbstractDatabase;
             switch (databaseType) {
                 case "mysql": {
                     const lib = await import('./databases/mysql');
-                    database = new lib.MySQLDatabase(options[1]);
+                    database = new lib.MySQLDatabase(options);
                     break;
                 }
                 case "sqlite": throw "No sqlite support yet";
                 case "postgres": throw "No postgres support yet";
                 default: throw "No database type found: " + (databaseType satisfies never)
             }
-            databaseInstance.set(options[0], database);
+            return database;
         }
-        const instanceOf = (req: any) => {
+        const instanceOf = async (req: any) => {
             let instanceName = req.query.instanceName || 'main';
-            return databaseInstance.get(instanceName);
+            if (databaseInstance.has(instanceName)) {
+                return databaseInstance.get(instanceName);
+            }
+            const dboptions = databaseInstancesOptions[instanceName]
+                || await options?.getOptions?.(instanceName);
+            if (!dboptions) {
+                databaseInstance.set(instanceName, null);
+                return null;
+            }
+            const db = await createInsance(dboptions);
+            databaseInstance.set(instanceName, db);
+            return db;
         }
 
 
         const router = Router();
-        router.get('/database-type', (req, res) => {
-            const database = instanceOf(req);
+        router.get('/database-type', async (req, res) => {
+            const database = await instanceOf(req);
             if (!database) return res.status(404).send({
                 message: "Unknown instance",
             });
@@ -56,7 +69,7 @@ const databaseUI = {
         });
         router.post('/sql', async (req, res) => {
             try {
-                const database = instanceOf(req);
+                const database = await instanceOf(req);
                 if (!database) throw "Unknown instance";
                 if (!req.body.sql) throw "No sql field found";
                 req.body.sql = easyPassEncoder.decode(req.body.sql, database.key);

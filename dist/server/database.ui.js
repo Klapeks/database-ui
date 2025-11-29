@@ -58,17 +58,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __values = (this && this.__values) || function(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -92,111 +81,125 @@ var databaseUI = {
         });
         return router;
     },
-    createApiRouter: function (databaseInstancesOptions) {
+    createApiRouter: function (databaseInstancesOptions, options) {
         return __awaiter(this, void 0, void 0, function () {
-            var databaseInstance, _a, _b, options, databaseType, database, _c, lib, e_1_1, instanceOf, router;
-            var e_1, _d;
+            var databaseInstance, createInsance, instanceOf, router;
             var _this = this;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
-                    case 0:
-                        databaseInstance = new Map();
-                        _e.label = 1;
-                    case 1:
-                        _e.trys.push([1, 11, 12, 13]);
-                        _a = __values(Object.entries(databaseInstancesOptions)), _b = _a.next();
-                        _e.label = 2;
-                    case 2:
-                        if (!!_b.done) return [3 /*break*/, 10];
-                        options = _b.value;
-                        databaseType = options[1].type;
-                        database = void 0;
-                        _c = databaseType;
-                        switch (_c) {
-                            case "mysql": return [3 /*break*/, 3];
-                            case "sqlite": return [3 /*break*/, 5];
-                            case "postgres": return [3 /*break*/, 6];
-                        }
-                        return [3 /*break*/, 7];
-                    case 3: return [4 /*yield*/, Promise.resolve().then(function () { return __importStar(require('./databases/mysql')); })];
-                    case 4:
-                        lib = _e.sent();
-                        database = new lib.MySQLDatabase(options[1]);
-                        return [3 /*break*/, 8];
-                    case 5: throw "No sqlite support yet";
-                    case 6: throw "No postgres support yet";
-                    case 7: throw "No database type found: " + (databaseType);
-                    case 8:
-                        databaseInstance.set(options[0], database);
-                        _e.label = 9;
-                    case 9:
-                        _b = _a.next();
-                        return [3 /*break*/, 2];
-                    case 10: return [3 /*break*/, 13];
-                    case 11:
-                        e_1_1 = _e.sent();
-                        e_1 = { error: e_1_1 };
-                        return [3 /*break*/, 13];
-                    case 12:
-                        try {
-                            if (_b && !_b.done && (_d = _a.return)) _d.call(_a);
-                        }
-                        finally { if (e_1) throw e_1.error; }
-                        return [7 /*endfinally*/];
-                    case 13:
-                        instanceOf = function (req) {
-                            var instanceName = req.query.instanceName || 'main';
-                            return databaseInstance.get(instanceName);
-                        };
-                        router = (0, express_1.Router)();
-                        router.get('/database-type', function (req, res) {
-                            var database = instanceOf(req);
-                            if (!database)
-                                return res.status(404).send({
-                                    message: "Unknown instance",
-                                });
-                            res.status(200).send({
-                                type: database.options.type,
-                                key: database.key
-                            });
-                        });
-                        router.post('/sql', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                            var database, data, encoded, err_1;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        _a.trys.push([0, 2, , 3]);
-                                        database = instanceOf(req);
-                                        if (!database)
-                                            throw "Unknown instance";
-                                        if (!req.body.sql)
-                                            throw "No sql field found";
-                                        req.body.sql = easy_pass_encoder_1.easyPassEncoder.decode(req.body.sql, database.key);
-                                        return [4 /*yield*/, database.sql(req.body.sql, req.body.params)];
-                                    case 1:
-                                        data = _a.sent();
-                                        encoded = easy_pass_encoder_1.easyPassEncoder.encodeJSON(data, database.key);
-                                        ;
-                                        res.status(200).send({ data: encoded });
-                                        return [3 /*break*/, 3];
-                                    case 2:
-                                        err_1 = _a.sent();
-                                        if (typeof err_1 == 'string') {
-                                            res.status(400).send({ message: err_1, error: err_1 });
-                                            return [2 /*return*/];
-                                        }
-                                        console.error("Unknown error:", err_1);
-                                        res.status(500).send({
-                                            message: err_1.message || "Unknown error",
-                                            error: err_1
-                                        });
-                                        return [3 /*break*/, 3];
-                                    case 3: return [2 /*return*/];
+            return __generator(this, function (_a) {
+                databaseInstance = new Map();
+                createInsance = function (options) { return __awaiter(_this, void 0, void 0, function () {
+                    var databaseType, database, _a, lib;
+                    return __generator(this, function (_b) {
+                        switch (_b.label) {
+                            case 0:
+                                databaseType = options.type;
+                                _a = databaseType;
+                                switch (_a) {
+                                    case "mysql": return [3 /*break*/, 1];
+                                    case "sqlite": return [3 /*break*/, 3];
+                                    case "postgres": return [3 /*break*/, 4];
                                 }
-                            });
-                        }); });
-                        return [2 /*return*/, router];
-                }
+                                return [3 /*break*/, 5];
+                            case 1: return [4 /*yield*/, Promise.resolve().then(function () { return __importStar(require('./databases/mysql')); })];
+                            case 2:
+                                lib = _b.sent();
+                                database = new lib.MySQLDatabase(options);
+                                return [3 /*break*/, 6];
+                            case 3: throw "No sqlite support yet";
+                            case 4: throw "No postgres support yet";
+                            case 5: throw "No database type found: " + (databaseType);
+                            case 6: return [2 /*return*/, database];
+                        }
+                    });
+                }); };
+                instanceOf = function (req) { return __awaiter(_this, void 0, void 0, function () {
+                    var instanceName, dboptions, _a, db;
+                    var _b;
+                    return __generator(this, function (_c) {
+                        switch (_c.label) {
+                            case 0:
+                                instanceName = req.query.instanceName || 'main';
+                                if (databaseInstance.has(instanceName)) {
+                                    return [2 /*return*/, databaseInstance.get(instanceName)];
+                                }
+                                _a = databaseInstancesOptions[instanceName];
+                                if (_a) return [3 /*break*/, 2];
+                                return [4 /*yield*/, ((_b = options === null || options === void 0 ? void 0 : options.getOptions) === null || _b === void 0 ? void 0 : _b.call(options, instanceName))];
+                            case 1:
+                                _a = (_c.sent());
+                                _c.label = 2;
+                            case 2:
+                                dboptions = _a;
+                                if (!dboptions) {
+                                    databaseInstance.set(instanceName, null);
+                                    return [2 /*return*/, null];
+                                }
+                                return [4 /*yield*/, createInsance(dboptions)];
+                            case 3:
+                                db = _c.sent();
+                                databaseInstance.set(instanceName, db);
+                                return [2 /*return*/, db];
+                        }
+                    });
+                }); };
+                router = (0, express_1.Router)();
+                router.get('/database-type', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    var database;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, instanceOf(req)];
+                            case 1:
+                                database = _a.sent();
+                                if (!database)
+                                    return [2 /*return*/, res.status(404).send({
+                                            message: "Unknown instance",
+                                        })];
+                                res.status(200).send({
+                                    type: database.options.type,
+                                    key: database.key
+                                });
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+                router.post('/sql', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    var database, data, encoded, err_1;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 3, , 4]);
+                                return [4 /*yield*/, instanceOf(req)];
+                            case 1:
+                                database = _a.sent();
+                                if (!database)
+                                    throw "Unknown instance";
+                                if (!req.body.sql)
+                                    throw "No sql field found";
+                                req.body.sql = easy_pass_encoder_1.easyPassEncoder.decode(req.body.sql, database.key);
+                                return [4 /*yield*/, database.sql(req.body.sql, req.body.params)];
+                            case 2:
+                                data = _a.sent();
+                                encoded = easy_pass_encoder_1.easyPassEncoder.encodeJSON(data, database.key);
+                                ;
+                                res.status(200).send({ data: encoded });
+                                return [3 /*break*/, 4];
+                            case 3:
+                                err_1 = _a.sent();
+                                if (typeof err_1 == 'string') {
+                                    res.status(400).send({ message: err_1, error: err_1 });
+                                    return [2 /*return*/];
+                                }
+                                console.error("Unknown error:", err_1);
+                                res.status(500).send({
+                                    message: err_1.message || "Unknown error",
+                                    error: err_1
+                                });
+                                return [3 /*break*/, 4];
+                            case 4: return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/, router];
             });
         });
     }
