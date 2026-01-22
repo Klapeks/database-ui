@@ -1,7 +1,7 @@
 {
     "name": "@klapeks/database-ui",
     "description": "Web database ui",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "main": "dist/server/index.js",
     "author": "Klapeks",
     "license": "ISC",
