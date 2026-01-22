@@ -206,7 +206,7 @@ export const fireEditDataModal = async (options: EditDataOptions) => {
             sql += ', `' + key + '` = ' + newObject[key];
         }
 
-        sql = `UPDATE \`${options.database}.${options.table}\` SET` + sql.substring(1);
+        sql = `UPDATE \`${options.database}\`.\`${options.table}\` SET` + sql.substring(1);
         sql += ' WHERE ' + Object.keys(where).map((key) => `\`${key}\` = ${where[key]}`).join(' AND ');
 
         sql += ';'
