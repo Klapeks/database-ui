@@ -14,6 +14,16 @@ function dataKey(schema: any[], data: any) {
         .map(c => c.COLUMN_NAME).map(c => data[c]);
     return ids.join('-');
 }
+function asText(data: any): string {
+    if (typeof data === 'number') return data.toString();
+    if (typeof data === 'bigint') return data.toString();
+    if (typeof data === 'boolean') return data ? 'true' : 'false';
+    if (typeof data === 'string') return data;
+    if (data === null || typeof data === 'undefined') return 'NULL';
+    if (!data) return data;
+    if (data instanceof Date) return data.toString();
+    return JSON.stringify(data);
+}
 
 export const TableViewer: FC<IProps> = ({ database, table }) => {
 
@@ -137,7 +147,7 @@ export const TableViewer: FC<IProps> = ({ database, table }) => {
                                         <p className={[
                                             data[field] === null && 'null'
                                         ].filter(Boolean).join(' ')}
-                                        >{data[field] ?? 'NULL'}</p>
+                                        >{asText(data[field])}</p>
                                     </td>
                                 ))}
                             </tr>
